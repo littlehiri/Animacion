@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     #region Unity Methods
     public float maxForwardSpeed = 8;
     public float moveSpeed = 2;
+    public float turnAroundSpeed = 100f;
     float _desiredForwardSpeed;
     float _forwardSpeed;
     //Aceleracion y desaceleracion del jugador
@@ -47,6 +48,7 @@ public class PlayerController : MonoBehaviour
     {
         //Guardamos en _moveDirection lo recibido que en este caso
         _moveDirection = context.ReadValue<Vector2>();
+        Debug.Log(_moveDirection);
     }
     
     //Parametro que devuelve verdadero o falso
@@ -61,11 +63,14 @@ public class PlayerController : MonoBehaviour
     {
         //Realizamos un movimiento de translacion
         //transform.Translate(_moveDirection.x * moveSpeed * Time.deltaTime, 0, _moveDirection.y);
+        //Parametro 
+        float fDirection = direction.y;
+        float turnAmount = direction.x;
         //Si la raiz cuadrada de la dirección es mayor que 1, ponla a 1 para que no se mueva más rapido en diagonal 
         if (direction.sqrMagnitude > 1f)
             direction.Normalize();
         //velocidad a la que queremos ir, será igual a la direccion multiplicada a la direccion maxima
-        _desiredForwardSpeed = direction.magnitude * maxForwardSpeed;
+        _desiredForwardSpeed = direction.magnitude * maxForwardSpeed *Mathf.Sign(fDirection);
         //Operador ternario equivalente a un if/else que actua sobre la misma variable
         float acceleration = IsMoveInput ? _groundAccel : _groundDecel;
 
@@ -73,6 +78,8 @@ public class PlayerController : MonoBehaviour
         _forwardSpeed = Mathf.MoveTowards(_forwardSpeed, _desiredForwardSpeed, acceleration * Time.deltaTime);
         //Le mandamos la velocidad de avance al animator   
         _anim.SetFloat("ForwardSpeed", _forwardSpeed);
+        //Se gira dependiendo de si pulsamos izquierda o derecha a una velocidad por segundo
+        transform.Rotate(0f, turnAmount * Time.deltaTime, 0f);
     }
     #endregion
 }
