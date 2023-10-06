@@ -13,9 +13,6 @@ public class PlayerController : MonoBehaviour
     #region VARIABLES AND REFERENCES
     //variable para el movimiento que al ser privada le ponemos
     Vector2 _moveDirection;
-    #endregion
-
-    #region Unity Methods
     public float maxForwardSpeed = 8;
     public float moveSpeed = 2;
     public float turnAroundSpeed = 100f;
@@ -24,8 +21,14 @@ public class PlayerController : MonoBehaviour
     //Aceleracion y desaceleracion del jugador
     const float _groundAccel = 5;
     const float _groundDecel = 25;
+    //Variable para la direccion de salto
+    float _jumpDirection;
 
     Animator _anim;
+    #endregion
+
+    #region Unity Methods
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +61,12 @@ public class PlayerController : MonoBehaviour
         //Si el valor de _MoveDirection no es aproximadamente 0
         get { return !Mathf.Approximately(_moveDirection.sqrMagnitude, 0f); }
     }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        //Guardamos en _jumpDirection lo recibido que en este caso será un float
+        _jumpDirection = context.ReadValue<float>();
+        Debug.Log(_jumpDirection);
+    }
 
     void Move(Vector2 direction)
     {
@@ -80,6 +89,11 @@ public class PlayerController : MonoBehaviour
         _anim.SetFloat("ForwardSpeed", _forwardSpeed);
         //Se gira dependiendo de si pulsamos izquierda o derecha a una velocidad por segundo
         transform.Rotate(0f, turnAmount * Time.deltaTime, 0f);
+    }
+
+    void Jump(float direction)
+    {
+        Debug.Log(direction);
     }
     #endregion
 }
