@@ -23,8 +23,13 @@ public class PlayerController : MonoBehaviour
     const float _groundDecel = 25;
     //Variable para la direccion de salto
     float _jumpDirection;
+    //Variable para la fuerza de salto
+    float _jumpSpeed = 30000f;
+    //Variable para conocer cuando estoy lista para saltar o no
+    bool _readyJump;
 
     Animator _anim;
+    Rigidbody _rb;
     #endregion
 
     #region Unity Methods
@@ -40,6 +45,8 @@ public class PlayerController : MonoBehaviour
     {
         //Hacemos que se mueva continuamente dependiendo de las teclas
         Move(_moveDirection);
+
+        Jump(_jumpDirection);
     }
 
 
@@ -93,7 +100,27 @@ public class PlayerController : MonoBehaviour
 
     void Jump(float direction)
     {
-        Debug.Log(direction);
+        //Debug.Log(direction);
+        if (direction > 0)
+        {
+            _anim.SetBool("ReadyJump", true);
+            //Al pulsar una tecla hacemos que se quede preparada para saltar
+            _readyJump = true;
+        }
+        else if (_readyJump)
+        {
+            _anim.SetBool("Launch", true);
+            _rb.AddForce(0f, _jumpSpeed, 0f);
+        }
+    }
+
+    //Metodo para decirle al personaje cuando salta
+    public void Launch()
+    {
+        //Aplicamos una fuerza de salto
+        _rb.AddForce(0f, _jumpSpeed, 0f);
+        //Aqui le decimos que una vez ha saltado para de hacer esa animación
+        _anim.SetBool("Launch", false);
     }
     #endregion
 }
