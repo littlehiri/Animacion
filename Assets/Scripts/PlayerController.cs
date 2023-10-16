@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     float _jumpDirection;
     //Variable para la fuerza de salto
     float _jumpSpeed = 30000f;
+    //Variable para conocer la fuerza de preparación de salto
+    float _jumpEffort = 0;
     //Variable para conocer cuando estoy lista para saltar o no
     bool _readyJump = false;
     //Creamos una variable para conocer cuando estamos tocando el suelo y cuando no
@@ -146,7 +148,7 @@ public class PlayerController : MonoBehaviour
     void Jump(float direction)
     {
         //Debug.Log(direction);
-        if (direction > 0)
+        if (direction > 0 && _onGround)
         {
             _anim.SetBool("ReadyJump", true);
             //Al pulsar una tecla hacemos que se quede preparada para saltar
@@ -173,6 +175,16 @@ public class PlayerController : MonoBehaviour
         _anim.SetBool("Launch", false);
         //Quitamos el RootMotion de el personaje
         _anim.applyRootMotion = false;
+    }
+
+    public void Land()
+    {
+        //Cuando esto ocurra habrá aterrizado
+        _anim.SetBool("Land", false);
+        //Volvemos a decirle que se active el movimiento por animación
+        _anim.applyRootMotion = true;
+        //Quitar animación
+        _anim.SetBool("Laumch", false);
     }
     #endregion
 
