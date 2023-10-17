@@ -68,6 +68,8 @@ public class PlayerController : MonoBehaviour
             {
                 //Lo estoy tocando
                 _onGround = true;
+                //Medimos la velocidad en ese momento
+                _anim.SetFloat("LandingVelocity", _rb.velocity.magnitude);
                 //Pondré el parámetro de aterrizaje en verdadero
                 _anim.SetBool("Land", true);
             }
